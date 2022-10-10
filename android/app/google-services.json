@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "603938967354",
+    "project_id": "drivepay-55920",
+    "storage_bucket": "drivepay-55920.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603938967354:android:252576c4abbf24acfd8a03",
+        "android_client_info": {
+          "package_name": "com.noosratlucy.drivepay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "603938967354-ilcnvpbsvq04alug2krpqpbpu2cuc6r5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAja2vs0nkPcdQp-w30vsGNdYMvgaAlS6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "603938967354-ilcnvpbsvq04alug2krpqpbpu2cuc6r5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
