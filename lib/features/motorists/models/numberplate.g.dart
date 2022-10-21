@@ -31,7 +31,7 @@ const NumberPlateSchema = Schema(
     r'plateNumber': PropertySchema(
       id: 3,
       name: r'plateNumber',
-      type: IsarType.long,
+      type: IsarType.string,
     )
   },
   estimateSize: _numberPlateEstimateSize,
@@ -52,6 +52,12 @@ int _numberPlateEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.plateNumber;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -64,7 +70,7 @@ void _numberPlateSerialize(
   writer.writeString(offsets[0], object.countryOrigin);
   writer.writeDateTime(offsets[1], object.createdDate);
   writer.writeDateTime(offsets[2], object.expiredDate);
-  writer.writeLong(offsets[3], object.plateNumber);
+  writer.writeString(offsets[3], object.plateNumber);
 }
 
 NumberPlate _numberPlateDeserialize(
@@ -77,7 +83,7 @@ NumberPlate _numberPlateDeserialize(
     countryOrigin: reader.readStringOrNull(offsets[0]),
     createdDate: reader.readDateTimeOrNull(offsets[1]),
     expiredDate: reader.readDateTimeOrNull(offsets[2]),
-    plateNumber: reader.readLongOrNull(offsets[3]),
+    plateNumber: reader.readStringOrNull(offsets[3]),
   );
   return object;
 }
@@ -96,7 +102,7 @@ P _numberPlateDeserializeProp<P>(
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -425,49 +431,58 @@ extension NumberPlateQueryFilter
   }
 
   QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
-      plateNumberEqualTo(int? value) {
+      plateNumberEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'plateNumber',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
       plateNumberGreaterThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'plateNumber',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
       plateNumberLessThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'plateNumber',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
       plateNumberBetween(
-    int? lower,
-    int? upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -476,6 +491,77 @@ extension NumberPlateQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
+      plateNumberStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'plateNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
+      plateNumberEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'plateNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
+      plateNumberContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'plateNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
+      plateNumberMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'plateNumber',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
+      plateNumberIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'plateNumber',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<NumberPlate, NumberPlate, QAfterFilterCondition>
+      plateNumberIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'plateNumber',
+        value: '',
       ));
     });
   }
@@ -489,7 +575,7 @@ extension NumberPlateQueryObject
 // **************************************************************************
 
 NumberPlate _$NumberPlateFromJson(Map<String, dynamic> json) => NumberPlate(
-      plateNumber: json['plateNumber'] as int?,
+      plateNumber: json['plateNumber'] as String?,
       countryOrigin: json['countryOrigin'] as String?,
       expiredDate: json['expiredDate'] == null
           ? null

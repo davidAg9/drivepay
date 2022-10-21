@@ -33,8 +33,13 @@ const CarSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _CarcarTypeEnumValueMap,
     ),
-    r'numberplate': PropertySchema(
+    r'modelName': PropertySchema(
       id: 3,
+      name: r'modelName',
+      type: IsarType.string,
+    ),
+    r'numberplate': PropertySchema(
+      id: 4,
       name: r'numberplate',
       type: IsarType.object,
       target: r'NumberPlate',
@@ -69,6 +74,7 @@ int _carEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.brandName.length * 3;
   bytesCount += 3 + object.carType.name.length * 3;
+  bytesCount += 3 + object.modelName.length * 3;
   {
     final value = object.numberplate;
     if (value != null) {
@@ -89,8 +95,9 @@ void _carSerialize(
   writer.writeDouble(offsets[0], object.amountToPay);
   writer.writeString(offsets[1], object.brandName);
   writer.writeString(offsets[2], object.carType.name);
+  writer.writeString(offsets[3], object.modelName);
   writer.writeObject<NumberPlate>(
-    offsets[3],
+    offsets[4],
     allOffsets,
     NumberPlateSchema.serialize,
     object.numberplate,
@@ -109,8 +116,9 @@ Car _carDeserialize(
     carType: _CarcarTypeValueEnumMap[reader.readStringOrNull(offsets[2])] ??
         CarType.truck,
     id: id,
+    modelName: reader.readString(offsets[3]),
     numberplate: reader.readObjectOrNull<NumberPlate>(
-      offsets[3],
+      offsets[4],
       NumberPlateSchema.deserialize,
       allOffsets,
     ),
@@ -133,6 +141,8 @@ P _carDeserializeProp<P>(
       return (_CarcarTypeValueEnumMap[reader.readStringOrNull(offset)] ??
           CarType.truck) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readObjectOrNull<NumberPlate>(
         offset,
         NumberPlateSchema.deserialize,
@@ -662,6 +672,134 @@ extension CarQueryFilter on QueryBuilder<Car, Car, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'modelName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'modelName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'modelName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'modelName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'modelName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'modelName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'modelName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'modelName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'modelName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterFilterCondition> modelNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'modelName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Car, Car, QAfterFilterCondition> numberplateIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -739,6 +877,18 @@ extension CarQuerySortBy on QueryBuilder<Car, Car, QSortBy> {
       return query.addSortBy(r'carType', Sort.desc);
     });
   }
+
+  QueryBuilder<Car, Car, QAfterSortBy> sortByModelName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'modelName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterSortBy> sortByModelNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'modelName', Sort.desc);
+    });
+  }
 }
 
 extension CarQuerySortThenBy on QueryBuilder<Car, Car, QSortThenBy> {
@@ -789,6 +939,18 @@ extension CarQuerySortThenBy on QueryBuilder<Car, Car, QSortThenBy> {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<Car, Car, QAfterSortBy> thenByModelName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'modelName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Car, Car, QAfterSortBy> thenByModelNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'modelName', Sort.desc);
+    });
+  }
 }
 
 extension CarQueryWhereDistinct on QueryBuilder<Car, Car, QDistinct> {
@@ -809,6 +971,13 @@ extension CarQueryWhereDistinct on QueryBuilder<Car, Car, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'carType', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Car, Car, QDistinct> distinctByModelName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'modelName', caseSensitive: caseSensitive);
     });
   }
 }
@@ -838,6 +1007,12 @@ extension CarQueryProperty on QueryBuilder<Car, Car, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Car, String, QQueryOperations> modelNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'modelName');
+    });
+  }
+
   QueryBuilder<Car, NumberPlate?, QQueryOperations> numberplateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'numberplate');
@@ -852,6 +1027,7 @@ extension CarQueryProperty on QueryBuilder<Car, Car, QQueryProperty> {
 Car _$CarFromJson(Map<String, dynamic> json) => Car(
       id: json['id'] as int?,
       brandName: json['brandName'] as String,
+      modelName: json['modelName'] as String,
       carType: $enumDecode(_$CarTypeEnumMap, json['carType']),
       numberplate: json['numberplate'] == null
           ? null
@@ -870,6 +1046,7 @@ Map<String, dynamic> _$CarToJson(Car instance) {
 
   writeNotNull('id', instance.id);
   val['brandName'] = instance.brandName;
+  val['modelName'] = instance.modelName;
   writeNotNull('amountToPay', instance.amountToPay);
   val['carType'] = _$CarTypeEnumMap[instance.carType]!;
   writeNotNull('numberplate', instance.numberplate?.toJson());

@@ -1,5 +1,5 @@
 import 'package:drivepay/features/motorists/signup/presentation/pages/signup_page.dart';
-import 'package:drivepay/firebase_options.dart';
+import 'package:drivepay/core/utilities/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

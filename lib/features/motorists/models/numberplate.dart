@@ -5,7 +5,7 @@ part 'numberplate.g.dart';
 @embedded
 @JsonSerializable(explicitToJson: true)
 class NumberPlate {
-  final int? plateNumber;
+  final String? plateNumber;
   final String? countryOrigin;
   final DateTime? expiredDate;
   final DateTime? createdDate;

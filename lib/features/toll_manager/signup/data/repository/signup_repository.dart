@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drivepay/features/toll_manager/models/tollmanager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:drivepay/features/motorists/models/motorist.dart';
-import 'package:drivepay/features/motorists/signup/domain/interfaces/account_registeration_interface.dart';
+import 'package:drivepay/core/interfaces/signup/account_registeration_interface.dart';
 
-class AccountRegistrationRepository implements AccountRegistrationRepositoryInterface {
+class TMAccountRegistrationRepository implements AccountRegistrationRepositoryInterface<TollManager> {
   final CollectionReference db;
 
-  AccountRegistrationRepository(this.db);
+  TMAccountRegistrationRepository(this.db);
 
   @override
   Future<void> changePassword({required forEmail}) async {
@@ -15,11 +15,11 @@ class AccountRegistrationRepository implements AccountRegistrationRepositoryInte
   }
 
   @override
-  Future<Motorist> register({required String fullname, required String email, required String password}) async {
+  Future<TollManager> register({required String fullname, required String email, required String password}) async {
     try {
       final userCreds = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      final motorist = Motorist(uid: userCreds.user!.uid, fullName: fullname, email: email, licenseID: "", joinDate: DateTime.now());
-      return motorist;
+      final tollmanager = TollManager(uid: userCreds.user!.uid);
+      return tollmanager;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw ErrorDescription("Your password is weak");
@@ -36,9 +36,9 @@ class AccountRegistrationRepository implements AccountRegistrationRepositoryInte
   }
 
   @override
-  Future<Motorist> save({required Motorist motorist}) async {
-    await db.doc(motorist.uid).set(motorist.toJson());
-    return motorist;
+  Future<TollManager> save({required TollManager user}) async {
+    await db.doc(user.uid).set(user.toJson());
+    return user;
   }
 
   @override

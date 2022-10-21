@@ -9,6 +9,7 @@ part 'car.g.dart';
 class Car {
   final Id? id;
   final String brandName;
+  final String modelName;
   final double? amountToPay;
   @Enumerated(EnumType.name)
   final CarType carType;
@@ -17,9 +18,9 @@ class Car {
 
   final motorist = IsarLink<Motorist>();
 
-  Car({this.id, required this.brandName, required this.carType, required this.numberplate, this.amountToPay});
+  Car({this.id, required this.brandName, required this.modelName, required this.carType, required this.numberplate, this.amountToPay});
 
-  factory Car.fromJson(Map<String, dynamic> json) => _$CarFromJson(json);
+  factory Car.fromJson(Map<String, Object> json) => _$CarFromJson(json);
   Map<String, dynamic> toJson() => _$CarToJson(this);
 }
 

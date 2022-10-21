@@ -47,4 +47,13 @@ class Validator {
     }
     return null;
   }
+
+  static String? locationName(String? value) {
+    if (value != null && value.isEmpty) {
+      return "required*";
+    } else if (!RegexToolkit.alphaNumericWithSpaces.hasMatch(value!)) {
+      return "location name must not have special characters";
+    }
+    return null;
+  }
 }
